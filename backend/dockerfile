@@ -1,0 +1,24 @@
+# Use node image as base
+FROM node:18
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source files
+COPY . .
+
+# Generate Prisma Client and run migrations
+RUN npx prisma generate
+# RUN npx prisma migrate deploy
+
+# Expose port 5000 (or the port used by your backend)
+EXPOSE 5000
+
+# Start the backend
+CMD ["npx", "prisma", "migrate", "deploy", "&&", "npm", "start"]
